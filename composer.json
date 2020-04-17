@@ -1,5 +1,6 @@
 {
   "name": "at-soft/php",
+  "version": "1.0.0",
   "require": {
     "catfan/medoo": "^1.7"
   },
@@ -10,5 +11,6 @@
     "psr-4":{
       "AtSoft\\SingPHP\\":"src"
     }
-  }
+  },
+  "license": "MIT"
 }
