@@ -1,0 +1,144 @@
+<?php
+
+namespace AtSoft\SingPHP\Common;
+
+class Dir
+{
+
+    /**
+     * 递归创建目录
+     * @param $dir
+     * @param int $mode
+     * @return bool
+     */
+    public static function make($dir, $mode = 0755)
+    {
+        if (\is_dir($dir) || \mkdir($dir, $mode, true)) {
+            return true;
+        }
+        if (!self::make(\dirname($dir), $mode)) {
+            return false;
+        }
+        return \mkdir($dir, $mode);
+    }
+
+    /**
+     * 递归获取目录下的文件
+     * @param $dir
+     * @param string $filter
+     * @param array $result
+     * @param bool $deep
+     * @return array
+     */
+    public static function tree($dir, $filter = '', &$result = array(), $deep = false)
+    {
+        $files = new \DirectoryIterator($dir);
+        foreach ($files as $file) {
+            if ($file->isDot()) {
+                continue;
+            }
+
+            $filename = $file->getFilename();
+            //过滤文件移动到下面  change by ahuo 2013-09-11 16:23
+            //if (!empty($filter) && !\preg_match($filter, $filename)) {
+              //  continue;
+            //}
+
+            if ($file->isDir()) {
+                self::tree($dir . DS . $filename, $filter, $result, $deep);
+            } else {
+                if(!empty($filter) && !\preg_match($filter,$filename)){
+                    continue;
+                }
+                if ($deep) {
+                    $result[$dir] = $filename;
+                } else {
+                    $result[] = $dir . DS . $filename;
+                }
+            }
+        }
+        return $result;
+    }
+
+
+    /**
+     * * 获取相关目录下的类
+     * @param $dir
+     * @param string $filter
+     * @param array $result
+     * @param string $before
+     * @return array
+     * @throws \Exception
+     */
+    static public function getClass($dir, $filter='', &$result=[], $before=''){
+        if(empty($filter)){
+            throw new \Exception("过滤条件错误");
+        }
+        $files = new \DirectoryIterator($dir);
+        foreach ($files as $file) {
+            if ($file->isDot()) {
+                continue;
+            }
+            $filename = $file->getFilename();
+            if ($file->isDir()) {
+                $tmp = $before.$filename . '\\';
+                self::getClass($dir.DS. $filename, $filter, $result, $tmp);
+            }else{
+                if(preg_match($filter,$filename, $match)){
+                    $result[] = $before.str_replace('.php','',$filename);
+                }
+            }
+        }
+        return $result;
+    }
+
+
+    static public function getFileName($dir, $filter='', &$result=[], $before=''){
+        if(empty($filter)){
+            throw new \Exception("过滤条件错误");
+        }
+        $files = new \DirectoryIterator($dir);
+        foreach ($files as $file) {
+            if ($file->isDot()) {
+                continue;
+            }
+            $filename = $file->getFilename();
+            if ($file->isDir()) {
+                $tmp = $before.$filename . DS;
+                self::getFileName($dir.DS. $filename, $filter, $result, $tmp);
+            }else{
+                if(preg_match($filter,$filename, $match)){
+                    $result[] = $before.$filename;
+                }
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * 递归删除目录
+     * @param $dir
+     * @param $filter
+     * @return bool
+     */
+    public static function del($dir, $filter = '')
+    {
+        $files = new \DirectoryIterator($dir);
+        foreach ($files as $file) {
+            if ($file->isDot()) {
+                continue;
+            }
+            $filename = $file->getFilename();
+            if (!empty($filter) && !\preg_match($filter, $filename)) {
+                continue;
+            }
+            if ($file->isDir()) {
+                self::del($dir . DS . $filename);
+            } else {
+                \unlink($dir . DS . $filename);
+            }
+        }
+        return \rmdir($dir);
+    }
+
+}

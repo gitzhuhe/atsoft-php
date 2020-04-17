@@ -1,0 +1,14 @@
+{
+  "name": "at-soft/php",
+  "require": {
+    "catfan/medoo": "^1.7"
+  },
+  "config": {
+    "secure-http": false
+  },
+  "autoload":{
+    "psr-4":{
+      "AtSoft\\SingPHP\\":"src"
+    }
+  }
+}
