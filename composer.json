@@ -1,6 +1,6 @@
 {
   "name": "at-soft/php",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "通过各种借鉴，实现了一个简单粗暴的适合自己习惯的框架。",
   "authors": [
     {
