@@ -27,7 +27,7 @@ class BaseMapper
     public function getById(Entity $data)
     {
         $class = get_class($data);
-        $data =  DB::get($this->table, '*', [
+        $data = DB::get($this->table, '*', [
             $data->getPrimaryKey() => $data->getPrimaryKeyValue()
         ]);
         $data = $data ? $this->Wrapper($class, $data) : false;
@@ -37,7 +37,7 @@ class BaseMapper
     public function getByMap(Entity $data)
     {
         $class = get_class($data);
-        $data = DB::get($this->table, '*', $data->toArray());
+        $data = DB::get($this->table, '*', $data->toArray(true));
         $data = $data ? $this->Wrapper($class, $data) : false;
         return $data;
     }
@@ -53,7 +53,7 @@ class BaseMapper
 
     public function updateByMap(Entity $data, Entity $map)
     {
-        return DB::update($this->table, $data->toArray(), $map->toArray());
+        return DB::update($this->table, $data->toArray(), $map->toArray(true));
     }
 
     public function updateByKey(Entity $data)
@@ -66,7 +66,7 @@ class BaseMapper
 
     public function count(Entity $data)
     {
-        $where = array_merge(['display' => 1], $data->toArray());
+        $where = array_merge(['display' => 1], $data->toArray(true));
         return DB::count($this->table, $where);
     }
 
@@ -79,7 +79,7 @@ class BaseMapper
             'LIMIT' => [$start, $limit]
         ];
         $class = get_class($data);
-        $where = array_merge(['display' => 1], $data->toArray(), $where);
+        $where = array_merge(['display' => 1], $data->toArray(true), $where);
         $data = DB::select($this->table, '*', $where);
         if ($data) {
             $data = $this->WrapperList($class, $data);
@@ -92,7 +92,7 @@ class BaseMapper
     public function fetchByMap(Entity $data)
     {
         $class = get_class($data);
-        $data = DB::select($this->table, '*', $data->toArray());
+        $data = DB::select($this->table, '*', $data->toArray(true));
         if ($data) {
             $data = $this->WrapperList($class, $data);
         } else {
