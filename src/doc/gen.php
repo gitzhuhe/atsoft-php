@@ -39,13 +39,13 @@ class gen extends Controller
                 $obj = Di::make($class, []);
                 $moudel = str_replace("Entity", "Controller", $class);
                 $moudel = str_replace("entity", "controller", $moudel);
-                $properties[$moudel] = $obj->getFieldDescription();
+                $properties[strtolower($moudel)] = $obj->getFieldDescription();
             }
         }
         $entity = [];
         foreach ($routeConfig as $key => $value) {
             $class = $value['module'];
-            $entity[$key] = $properties[$class];
+            $entity[$key] = $properties[strtolower($class)];
         }
 
         $list = [];

@@ -38,6 +38,9 @@ class App extends Sing
     {
         defined('DS') || define('DS', DIRECTORY_SEPARATOR);
         if (!defined('APP_ROOT')) define('APP_ROOT', substr(dirname(__FILE__), 0, -4));
+
+        parent::init();
+
         //设置异常处理的函数
         set_exception_handler(array(self::$ErrorClass, 'exception_error'));
         //欲注册的自动装载函数。
@@ -49,7 +52,6 @@ class App extends Sing
                 return Sing::autoload($class);
             }
         }
-        parent::init();
 
         Di::init(Container::getInstance());
         $cache = Config::get('cache');
@@ -69,10 +71,10 @@ class App extends Sing
             } else if (!empty($argv[1])) {
                 define('__INFO__', trim($argv[1], '/'));
                 define('__EXT__', strtolower(pathinfo($argv[1], PATHINFO_EXTENSION)));
-                self::controller();
+                self::controller(trim($argv[1], '/'));
             } else {
                 echo "=====================================================\n";
-                echo "Usage: gen\n";
+                echo "Usage: gen or controller\n";
                 echo "=====================================================\n";
                 exit;
             }
