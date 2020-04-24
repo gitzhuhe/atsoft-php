@@ -70,7 +70,7 @@ class BaseMapper
         return DB::count($this->table, $where);
     }
 
-    public function fetch(Entity $data, $start = 0, $limit = 10)
+    public function fetch(Entity $data, $start = 0, $limit = 10, $other = [])
     {
         if ($limit > 1000) {
             $limit = 10;
@@ -79,7 +79,7 @@ class BaseMapper
             'LIMIT' => [$start, $limit]
         ];
         $class = get_class($data);
-        $where = array_merge(['display' => 1], $data->toArray(true), $where);
+        $where = array_merge(['display' => 1], $data->toArray(true), $where, $other);
         $data = DB::select($this->table, '*', $where);
         if ($data) {
             $data = $this->WrapperList($class, $data);
@@ -89,10 +89,12 @@ class BaseMapper
         return $data;
     }
 
-    public function fetchByMap(Entity $data)
+    public function fetchByMap(Entity $data, $other = [])
     {
         $class = get_class($data);
-        $data = DB::select($this->table, '*', $data->toArray(true));
+        $data = $data->toArray(true);
+        $data = array_merge($data, $other);
+        $data = DB::select($this->table, '*', $data);
         if ($data) {
             $data = $this->WrapperList($class, $data);
         } else {
