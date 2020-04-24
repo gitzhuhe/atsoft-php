@@ -53,16 +53,9 @@ class BaseMapper
 
     public function updateByMap(Entity $data, Entity $map)
     {
+        $data->setUpdatetime(time());
         return DB::update($this->table, $data->toArray(), $map->toArray(true));
     }
-
-    public function updateByKey(Entity $data)
-    {
-        return DB::update($this->table, $data, [
-            $data->getPrimaryKey() => $data->getPrimaryKeyValue()
-        ]);
-    }
-
 
     public function count(Entity $data)
     {
