@@ -57,9 +57,9 @@ class BaseMapper
         return DB::update($this->table, $data->toArray(), $map->toArray(true));
     }
 
-    public function count(Entity $data)
+    public function count(Entity $data, $other)
     {
-        $where = array_merge(['display' => 1], $data->toArray(true));
+        $where = array_merge(['display' => 1], $data->toArray(true), $other);
         return DB::count($this->table, $where);
     }
 
