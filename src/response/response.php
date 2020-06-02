@@ -3,6 +3,7 @@
 
 namespace AtSoft\SingPHP\response;
 
+use AtSoft\SingPHP\Common\camelize;
 use AtSoft\SingPHP\Context\RequestContext;
 
 class  response
@@ -52,13 +53,10 @@ class  response
                         $resultField = $data->getResultField();
                     }
                     $actvite = RequestContext::getActvite();
-//                    if ($resultField && !$resultField[$actvite]) {
-//                        $resultField[$actvite] = [];
-//                    }
                     foreach ($ref->getProperties() as $var) {
 
                         if ($var->class == $class && !in_array($var->name, $data->getBlackKey()) && ($resultField[$actvite]  ? in_array($var->name, $resultField[$actvite]) : true)) {
-                            $dataList[self::camelize($var->name)] = self::JsonReturn(call_user_func([$data, 'get' . ucfirst($var->name)]));
+                            $dataList[camelize::enCamelize($var->name)] = self::JsonReturn(call_user_func([$data, 'get' . ucfirst($var->name)]));
                         }
                     }
                     return $dataList;
@@ -69,18 +67,6 @@ class  response
                 break;
         }
         return $data;
-
     }
 
-    /**
-     * 　　 下划线转驼峰
-     * 　　 思路:
-     * 　　 step1.原字符串转小写,原字符串中的分隔符用空格替换,在字符串开头加上分隔符
-     * 　　 step2.将字符串中每个单词的首字母转换为大写,再去空格,去字符串首部附加的分隔符.
-     **/
-    private static function camelize($uncamelized_words, $separator = '_')
-    {
-        $uncamelized_words = $separator . str_replace($separator, " ", strtolower($uncamelized_words));
-        return ltrim(str_replace(" ", "", ucwords($uncamelized_words)), $separator);
-    }
 }
