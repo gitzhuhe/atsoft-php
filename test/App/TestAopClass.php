@@ -18,6 +18,7 @@ class TestAopClass implements AopInterface
 
     public function docAfter($result){
 
+
         return $result;
     }
 

@@ -23,13 +23,20 @@ class AopWrapper
     {
 
         $aopObjectName = self::$Aop[$objectName];
-        if (!$this->aopObject) {
+        if(!$aopObjectName){
+            // 根据父类匹配
+            $objRef = new \ReflectionClass($objectName);
+            $aopObjectName = self::$Aop[$objRef->getParentClass()->name];
+        }
+        if (!$this->aopObject && $aopObjectName) {
             $ref = new \ReflectionClass($aopObjectName);
             if (in_array('AtSoft\SingPHP\Core\AopInterface', $ref->getInterfaceNames())) {
                 $this->aopObject = new $aopObjectName();
-            } else {
-                throw new globalException('Aop类错误:' . $aopObjectName);
+            } else{
+                throw new globalException('Aop Type error');
             }
+        }else {
+            $this->aopObject = new \stdClass();
         }
         // 创建对象前执行
         if (method_exists($this->aopObject, 'create')) {

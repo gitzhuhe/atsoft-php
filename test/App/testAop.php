@@ -7,5 +7,6 @@
  * Time: 15:21
  */
 return [
-    'AtSoft\SingPHP\doc\gen' => TestAopClass::class
+    'AtSoft\SingPHP\doc\gen1' => TestAopClass::class,
+    'AtSoft\SingPHP\Core\BaseMapper' => TestAopClass2::class,
 ];
