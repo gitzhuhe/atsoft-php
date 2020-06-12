@@ -90,7 +90,10 @@ class App extends Sing
 
     private static function controller($path)
     {
-        //$path = explode('/', __INFO__);
+        // $path = explode('/', __INFO__);
+        if(!$path){
+            $path = '/';
+        }
         $Router = Route::load();
         $Router += [
             '/doc' => [
@@ -112,14 +115,12 @@ class App extends Sing
         $actvite = $controller['function'];
         RequestContext::setActvite($actvite);
 
-        $object = DI::make($class);
-        if (!$object instanceof Controller) {
+        $ref = new \ReflectionClass($class);
+        if ($ref->getParentClass()->name !== 'AtSoft\SingPHP\Controller\Controller') {
             throw new NotFoundException();
         } else {
-            if (method_exists($object, 'init')) {
-                call_user_func([$object, 'init']);
-            }
-            if (!method_exists($object, $actvite)) {
+            $object = DI::make($class);
+            if (!$ref->hasMethod($actvite)) {
                 throw new NotFoundException();
             } else {
                 $result = call_user_func([$object, $actvite]);

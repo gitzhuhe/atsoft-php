@@ -1,1 +1,4 @@
 ﻿.idea
+vendor
+composer.lock
+.user.ini

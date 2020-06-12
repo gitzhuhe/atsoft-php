@@ -19,5 +19,8 @@
       "AtSoft\\SingPHP\\":"src"
     }
   },
-  "license": "MIT"
+  "license": "MIT",
+  "require-dev": {
+    "doctrine/cache": "^1.10"
+  }
 }

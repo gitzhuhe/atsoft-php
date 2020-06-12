@@ -33,17 +33,14 @@ class Container
 
         if (!\class_exists($objectName)) {
             throw new ServerException($objectName . ' not exsist!');
-//            return null;
         }
         //TODO 在这里注入AOP配置
-        if ($params===null) {
-            self::$allObject[$keyName] = new $objectName();
-        } else {
-            self::$allObject[$keyName] = new $objectName($params);
-        }
-        if (method_exists(self::$allObject[$keyName], 'init')) {
-            call_user_func([self::$allObject[$keyName], 'init']);
-        }
+        self::$allObject[$keyName] = AopWrapper::init($objectName, $params);
+//        if ($params===null) {
+//            self::$allObject[$keyName] = new AopWrapper(new $objectName());
+//        } else {
+//            self::$allObject[$keyName] = new AopWrapper(new $objectName($params));
+//        }
         return self::$allObject[$keyName];
     }
 

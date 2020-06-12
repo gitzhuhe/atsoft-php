@@ -38,6 +38,22 @@ class genCode
                 // 没有更新时间
                 DB::query("ALTER TABLE ${table} ADD COLUMN `updatetime` int(10) NULL DEFAULT 0");
             }
+            if (!in_array('inputtime', $Fields)) {
+                // 没有插入时间
+                DB::query("ALTER TABLE ${table} ADD COLUMN `create_time` datetime(0) NULL");
+            }
+            if (!in_array('updatetime', $Fields)) {
+                // 没有更新时间
+                DB::query("ALTER TABLE ${table} ADD COLUMN `update_time` datetime(0) NULL");
+            }
+            if (!in_array('inputtime', $Fields)) {
+                // 没有插入时间
+                DB::query("ALTER TABLE ${table} ADD COLUMN `create_user` bigint(20) NULL");
+            }
+            if (!in_array('updatetime', $Fields)) {
+                // 没有更新时间
+                DB::query("ALTER TABLE ${table} ADD COLUMN `update_user` bigint(20) NULL");
+            }
             $row = DB::query("SHOW FULL COLUMNS FROM ${table}")->fetchAll();
 
             $dbConfig = Config::getField('mysql', 'default', '');

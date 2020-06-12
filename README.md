@@ -72,7 +72,49 @@ return [
 
 ### AOP
 
-待实现
+#### 定义
+
+文件名为 ***Aop.php
+
+```php
+return [
+    'AtSoft\SingPHP\doc\gen' => TestAopClass::class
+];
+```
+####  Aop处理器
+
+```php
+
+use AtSoft\SingPHP\Core\AopInterface;
+
+class TestAopClass implements AopInterface
+{
+
+    // 方法名+Before 执行前运行的
+    public function docBefore($arguments){
+        return $arguments;
+    }
+    // 方法名+After 执行后运行的
+    public function docAfter($result){
+
+        return $result;
+    }
+
+    // 对象创建前 执行的方法
+    function create($params)
+    {
+        return $params;
+    }
+
+    // 对象创建后 执行的方法
+    function created($params)
+    {
+        // TODO: Implement created() method.
+    }
+}
+
+```
+
 
 ### 代码生成器 Gen
 
