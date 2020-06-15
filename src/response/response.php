@@ -7,6 +7,7 @@ use AtSoft\SingPHP\Common\camelize;
 use AtSoft\SingPHP\Common\Entity;
 use AtSoft\SingPHP\Context\RequestContext;
 use AtSoft\SingPHP\Core\AopInterface;
+use AtSoft\SingPHP\Core\AopWrapper;
 
 class  response
 {
@@ -71,7 +72,7 @@ class  response
         return $data;
     }
     protected static function getEntityType($aopWrapper){
-        if($aopWrapper instanceof AopInterface){
+        if($aopWrapper instanceof AopWrapper){
             return get_class($aopWrapper->getObject());
         }else if ($aopWrapper instanceof Entity){
             return get_class($aopWrapper);

@@ -82,7 +82,7 @@ class BaseMapper
         return $data;
     }
 
-    public function fetchByMap(Entity $data, $other = [])
+    public function fetchByMap($data, $other = [])
     {
         $class = $this->getEntityType($data);
         $data = $data->toArray(true);
@@ -97,21 +97,21 @@ class BaseMapper
     }
 
 
-    public function delete(Entity $data)
+    public function delete($data)
     {
         $entity = $this->setkeyValue($data);
         $entity->setDisplay(0);
         return $this->updateById($entity);
     }
 
-    public function recovery(Entity $data)
+    public function recovery($data)
     {
         $entity = $this->setkeyValue($data);
         $entity->setDisplay(1);
         return $this->updateById($entity);
     }
 
-    protected function setkeyValue(Entity $data)
+    protected function setkeyValue($data)
     {
         $keyValue = $data->getPrimaryKeyValue();
         $PrimaryKey = $data->getPrimaryKey();
@@ -147,7 +147,7 @@ class BaseMapper
     }
 
     protected function getEntityType($aopWrapper){
-        if($aopWrapper instanceof AopInterface){
+        if($aopWrapper instanceof AopWrapper){
             return get_class($aopWrapper->getObject());
         }else if ($aopWrapper instanceof Entity){
             return get_class($aopWrapper);
