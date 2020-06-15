@@ -17,16 +17,16 @@ class BaseMapper
 {
     protected $table;
 
-    public function insert(Entity $data)
+    public function insert($data)
     {
         $data->setInputtime(time());
         DB::insert($this->table, $data->toArray());
         return DB::id();
     }
 
-    public function getById(Entity $data)
+    public function getById($data)
     {
-        $class = get_class($data);
+        $class = $this->getEntityType($data);
         $data = DB::get($this->table, '*', [
             $data->getPrimaryKey() => $data->getPrimaryKeyValue()
         ]);
@@ -34,15 +34,15 @@ class BaseMapper
         return $data;
     }
 
-    public function getByMap(Entity $data)
+    public function getByMap($data)
     {
-        $class = get_class($data);
+        $class = $this->getEntityType($data);
         $data = DB::get($this->table, '*', $data->toArray(true));
         $data = $data ? $this->Wrapper($class, $data) : false;
         return $data;
     }
 
-    public function updateById(Entity $data)
+    public function updateById($data)
     {
         $data->setUpdatetime(time());
         $data = DB::update($this->table, $data->toArray(), [
@@ -51,19 +51,19 @@ class BaseMapper
         return $data;
     }
 
-    public function updateByMap(Entity $data, Entity $map)
+    public function updateByMap($data, $map)
     {
         $data->setUpdatetime(time());
         return DB::update($this->table, $data->toArray(), $map->toArray(true));
     }
 
-    public function count(Entity $data, $other = [])
+    public function count($data, $other = [])
     {
         $where = array_merge(['display' => 1], $data->toArray(true), $other);
         return DB::count($this->table, $where);
     }
 
-    public function fetch(Entity $data, $start = 0, $limit = 10, $other = [])
+    public function fetch($data, $start = 0, $limit = 10, $other = [])
     {
         if ($limit > 1000) {
             $limit = 10;
@@ -71,7 +71,7 @@ class BaseMapper
         $where = [
             'LIMIT' => [$start, $limit]
         ];
-        $class = get_class($data);
+        $class = $this->getEntityType($data);
         $where = array_merge(['display' => 1], $data->toArray(true), $where, $other);
         $data = DB::select($this->table, '*', $where);
         if ($data) {
@@ -84,7 +84,7 @@ class BaseMapper
 
     public function fetchByMap(Entity $data, $other = [])
     {
-        $class = get_class($data);
+        $class = $this->getEntityType($data);
         $data = $data->toArray(true);
         $data = array_merge($data, $other);
         $data = DB::select($this->table, '*', $data);
@@ -144,5 +144,15 @@ class BaseMapper
             $list[$key] = Di::entity($class, $value);
         }
         return $list;
+    }
+
+    protected function getEntityType($aopWrapper){
+        if($aopWrapper instanceof AopInterface){
+            return get_class($aopWrapper->getObject());
+        }else if ($aopWrapper instanceof Entity){
+            return get_class($aopWrapper);
+        }else{
+            return \stdClass::class;
+        }
     }
 }

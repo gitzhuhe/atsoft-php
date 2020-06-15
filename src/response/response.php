@@ -4,7 +4,9 @@
 namespace AtSoft\SingPHP\response;
 
 use AtSoft\SingPHP\Common\camelize;
+use AtSoft\SingPHP\Common\Entity;
 use AtSoft\SingPHP\Context\RequestContext;
+use AtSoft\SingPHP\Core\AopInterface;
 
 class  response
 {
@@ -44,7 +46,7 @@ class  response
                 break;
             case 'object':
                 $dataList = [];
-                $class = get_class($data);
+                $class = self::getEntityType($data);
                 $parentClass = get_parent_class($class);
                 if ($class && 'AtSoft\SingPHP\Common\Entity' === $parentClass) {
                     $ref = new \ReflectionClass($class);
@@ -68,5 +70,13 @@ class  response
         }
         return $data;
     }
-
+    protected static function getEntityType($aopWrapper){
+        if($aopWrapper instanceof AopInterface){
+            return get_class($aopWrapper->getObject());
+        }else if ($aopWrapper instanceof Entity){
+            return get_class($aopWrapper);
+        }else{
+            return \stdClass::class;
+        }
+    }
 }

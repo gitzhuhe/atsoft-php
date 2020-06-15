@@ -77,4 +77,8 @@ class AopWrapper
         }
         return $result;
     }
+
+    public function getObject(){
+        return $this->object;
+    }
 }
