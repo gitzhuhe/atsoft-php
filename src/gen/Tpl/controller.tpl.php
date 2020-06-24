@@ -24,7 +24,7 @@ class <?=$name?>Controller extends Controller
     public function fetch()
     {
         $data = Di::make(<?=$name?>Service::class)->fetch();
-        return successResponse::result($data);
+        return successResponse::pageInfo($data);
     }
 
     public function delete()

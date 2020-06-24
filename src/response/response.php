@@ -11,7 +11,7 @@ use AtSoft\SingPHP\Core\AopWrapper;
 
 class  response
 {
-    public static function result($code = "", $message = 'ok', $data = [])
+    public static function result($code = "", $message = 'ok', $data = [], $count = false, $pageSize = false)
     {
         $data = self::JsonReturn(
             [
@@ -20,7 +20,12 @@ class  response
                 'data' => $data,
             ]
         );
-//        exit();
+        if ($count !== false) {
+            $data['count'] = $count;
+        }
+        if ($count !== false) {
+            $data['pageSize'] = $pageSize;
+        }
         if (!is_array($data)) {
             return $data;
         } else {
@@ -58,7 +63,7 @@ class  response
                     $actvite = RequestContext::getActvite();
                     foreach ($ref->getProperties() as $var) {
 
-                        if ($var->class == $class && !in_array($var->name, $data->getBlackKey()) && ($resultField[$actvite]  ? in_array($var->name, $resultField[$actvite]) : true)) {
+                        if ($var->class == $class && !in_array($var->name, $data->getBlackKey()) && ($resultField[$actvite] ? in_array($var->name, $resultField[$actvite]) : true)) {
                             $dataList[camelize::enCamelize($var->name)] = self::JsonReturn(call_user_func([$data, 'get' . ucfirst($var->name)]));
                         }
                     }
@@ -71,12 +76,14 @@ class  response
         }
         return $data;
     }
-    protected static function getEntityType($aopWrapper){
-        if($aopWrapper instanceof AopWrapper){
+
+    protected static function getEntityType($aopWrapper)
+    {
+        if ($aopWrapper instanceof AopWrapper) {
             return get_class($aopWrapper->getObject());
-        }else if ($aopWrapper instanceof Entity){
+        } else if ($aopWrapper instanceof Entity) {
             return get_class($aopWrapper);
-        }else{
+        } else {
             return \stdClass::class;
         }
     }

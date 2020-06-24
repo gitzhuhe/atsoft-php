@@ -19,4 +19,9 @@ class successResponse extends response
         }
         return parent::result($code, $message, $data);
     }
+
+    public static function pageInfo($data)
+    {
+        return parent::result(0, 'ok', $data['data'], $data['count'], $data['pageSize']);
+    }
 }

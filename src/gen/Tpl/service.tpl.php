@@ -35,18 +35,15 @@ class <?=$name?>Service
 
     public function fetch()
     {
-        $pageSize = $_GET['pageSize'];
+        $pageSize = $_GET['limit'];
         $current = $_GET['page'];
         $start = ($current - 1) * $pageSize;
         $count = $this->mapper->count($this->entity);
         $list = $this->mapper->fetch($this->entity, $start, $pageSize);
         return [
-            'page'=>[
-                'count'=>$count,
-                'pageSize'=>$pageSize,
-                'current'=>$current,
-            ],
-            'list'=>$list,
+            'count'=>$count,
+            'pageSize'=>$pageSize,
+            'data'=>$list,
         ];
     }
 
