@@ -75,11 +75,7 @@ class Entity
             if ($var->class == get_class($this)) {
                 $value = !in_array($var->name, $this->getBlackKey()) && ($this->field ? in_array($var->name, $this->field) : true) ? call_user_func([$this, 'get' . ucfirst($var->name)]) : "";
                 if ($value !== "" && $value !== null && !in_array($var->name, ['blackKey', 'rules', 'fieldDescription'])) {
-                    if (is_array($value) && $isWhere) {
-                        $data[$var->name . '[' . $value[0] . ']'] = $value[1];
-                    } else {
-                        $data[$var->name] = $value;
-                    }
+                    $data[$var->name] = $value;
                 }
             }
         }
