@@ -6,7 +6,7 @@ namespace AtSoft\SingPHP\response;
 
 class successResponse extends response
 {
-    public static function result($code = 0, $message = '', $data = [])
+    public static function result($code = 0, $message = '', $data = [],$count = false, $pageSize = false)
     {
         if (!$message && !$data) {
             $data = $code;
@@ -17,7 +17,7 @@ class successResponse extends response
             $message = $code;
             $code = 0;
         }
-        return parent::result($code, $message, $data);
+        return parent::result($code, $message, $data,$count = false, $pageSize = false);
     }
 
     public static function pageInfo($data)

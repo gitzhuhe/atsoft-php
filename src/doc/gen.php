@@ -10,6 +10,7 @@
 namespace AtSoft\SingPHP\doc;
 
 
+use AtSoft\SingPHP\Common\camelize;
 use AtSoft\SingPHP\Common\Dir;
 use AtSoft\SingPHP\Controller\Controller;
 use AtSoft\SingPHP\Core\Di;
@@ -39,7 +40,11 @@ class gen extends Controller
                 $obj = Di::make($class, []);
                 $moudel = str_replace("Entity", "Controller", $class);
                 $moudel = str_replace("entity", "controller", $moudel);
-                $properties[strtolower($moudel)] = $obj->getFieldDescription();
+                $field = $obj->getFieldDescription();
+                foreach ($field as $k => $v) {
+                    $field[$k] = array_merge($v, ['key' => camelize::enCamelize($v['key'])]);
+                }
+                $properties[strtolower($moudel)] = $field;
             }
         }
         $entity = [];

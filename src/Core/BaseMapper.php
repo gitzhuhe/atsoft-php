@@ -116,7 +116,7 @@ class BaseMapper
         $keyValue = $data->getPrimaryKeyValue();
         $PrimaryKey = $data->getPrimaryKey();
         $func = 'set' . ucfirst($PrimaryKey);
-        $class = get_class($data);
+        $class = $this->getEntityType($data);
         $entity = Di::entity($class);
         $entity->$func($keyValue);
         return $entity;
