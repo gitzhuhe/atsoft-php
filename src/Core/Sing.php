@@ -108,12 +108,6 @@ class Sing
             $_POST = dstripslashes($_POST);
             $_COOKIE = dstripslashes($_COOKIE);
         }
-        $prelength = strlen(self::$_var['config']['cookie']['cookiepre']);
-        foreach ($_COOKIE as $key => $val) {
-            if (substr($key, 0, $prelength) == self::$_var['config']['cookie']['cookiepre']) {
-                self::$_var['cookie'][substr($key, $prelength)] = $val;
-            }
-        }
 
         $postInput = file_get_contents('php://input');
         $phpInput = json_decode($postInput, true);
@@ -140,24 +134,23 @@ class Sing
     private static function _init_output()
     {
         // 压缩输出
-        if (!empty($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === false) {
-            self::$_var['config']['output']['gzip'] = false;
-        }
-        $allowgzip = self::$_var['config']['output']['gzip'] && EXT_OBGZIP;
-        Config::setglobal('gzipcompress', $allowgzip);
-
-        if (!ob_start($allowgzip ? 'ob_gzhandler' : null)) {
-            ob_start();
-        }
-        Config::setglobal('charset', self::$_var['config']['output']['charset']);
-        define('CHARSET', self::$_var['config']['output']['charset']);
+//        if (!empty($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === false) {
+//            self::$_var['config']['output']['gzip'] = false;
+//        }
+//        $allowgzip = self::$_var['config']['output']['gzip'] && EXT_OBGZIP;
+//        Config::setglobal('gzipcompress', $allowgzip);
+//
+//        if (!ob_start($allowgzip ? 'ob_gzhandler' : null)) {
+//            ob_start();
+//        }
+//        Config::setglobal('charset', self::$_var['config']['output']['charset']);
+//        define('CHARSET', self::$_var['config']['output']['charset']);
 
         // @header("Access-Control-Allow-Origin: ".$_SERVER['Origin']);
-        if (is_array(self::$_var['config']['HEADERS'])) {
-            foreach (self::$_var['config']['HEADERS'] as $header) {
-                @header($header);
-            }
+        foreach (Config::get('HEADERS', []) as $header) {
+            @header($header);
         }
+
     }
 
     //加载文件
